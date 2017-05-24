@@ -4,7 +4,7 @@
   "description": "b.gle Server",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/test.**.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -17,10 +17,13 @@
   },
   "homepage": "https://github.com/B-gle/Server#readme",
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "passport": "^0.3.2",
+    "passport-kakao": "0.0.4"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^3.4.1"
+    "mocha": "^3.4.1",
+    "supertest": "^3.0.0"
   }
 }
