@@ -1,0 +1,25 @@
+{
+  "name": "b.gle",
+  "version": "1.0.0",
+  "description": "b.gle Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "vows --spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/B-gle/Server.git"
+  },
+  "author": "Nesoy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/B-gle/Server/issues"
+  },
+  "homepage": "https://github.com/B-gle/Server#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.1"
+  }
+}
