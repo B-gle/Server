@@ -4,7 +4,7 @@
   "description": "b.gle Server",
   "main": "index.js",
   "scripts": {
-    "test": "vows --spec"
+    "test": "echo Hello world"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
     "express": "^4.15.3"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "mocha": "^3.4.1"
   }
 }
