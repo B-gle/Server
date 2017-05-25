@@ -1,6 +1,6 @@
 const request = require('supertest');
 const expect = require('chai').expect;
-const app = require('../lib/B.gle')
+const app = require('../B.gle/B.gle');
 
 describe('Member', () => {
     it('Test Signup', (done) => {
