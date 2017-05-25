@@ -18,8 +18,10 @@
   "homepage": "https://github.com/B-gle/Server#readme",
   "dependencies": {
     "express": "^4.15.3",
+    "mysql": "^2.13.0",
     "passport": "^0.3.2",
-    "passport-kakao": "0.0.4"
+    "passport-kakao": "0.0.4",
+    "sequelize": "^3.30.4"
   },
   "devDependencies": {
     "chai": "^3.5.0",
