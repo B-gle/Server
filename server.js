@@ -1,3 +1,3 @@
-const server = require('./B.gle/B.gle')
+const server = require('./B-gle/B-gle.js')
 
 server.listen(3000);
