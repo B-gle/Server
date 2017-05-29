@@ -1,6 +1,7 @@
 const express = require('express');
-const post = require('../model/post');
-const s3Controller = require('../upload/s3Controller');
+const Image = require('../model/image');
+const s3Handler = require('../handler/s3Handler');
+const imageHandler = require('../handler/imageHandler');
 const router = express.Router();
 
 
@@ -16,17 +17,22 @@ function getB_gle(req, res) {
 async function createB_gle(req, res) {
     try {
         for (let fileName in req.files) {
+            let file;
             if (Array.isArray(req.files[fileName])) {
                 for (let fileIndex in req.files[fileName]) {
-                    await s3Controller.upload(req.files[fileName][fileIndex]);
+                    file = req.files[fileName][fileIndex];
+                    let image = await handleB_gle(file);
+
                 }
             }else{
-                await s3Controller.upload(req.files[fileName]);
+                file = req.files[fileName];
+                let image = await handleB_gle(file);
+
             }
+
         }
         res.send('Success Image');
     } catch (error) {
-        console.log('Task Failure', error);
         res.status(500).send('Something broke!');
     }
 
@@ -38,5 +44,18 @@ function removeB_gle(req, res) {
     res.send('Hello');
 }
 
+async function handleB_gle(file){
+    let image = new Image();
+    image.setFilePath(file.path);
+    image.setThumbnail(file.path+'_thumb');
+    image.setType(file.type);
+
+    await imageHandler.makeThumbnail(image);
+    image = await s3Handler.uploadImage(image);
+    await s3Handler.uploadThumbnail(image);
+
+    imageHandler.removeImages(image);
+    return image;
+}
 
 module.exports = router;

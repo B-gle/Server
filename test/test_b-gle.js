@@ -19,19 +19,37 @@ describe('B.gle', () => {
 
     });
     describe('# Post', () => {
-        it('# Upload Picture', (done) => {
+        it('# Upload Single Picture', (done) => {
             request(app)
                 .post('/b-gle')
-                .attach('Image2', 'test/image/test.jpg')
+                .attach('Image1', 'test/image/test.jpg')
                 .end((err, res) => {
                     if (err) {
-                        console.log('error');
+                        expect(res.text).to.equal('Fail Image');
                         done(err);
                         return;
                     }
                     expect(res.text).to.equal('Success Image');
                     done();
                 });
+        });
+        it('# Upload Multi Picture', (done) => {
+            request(app)
+                .post('/b-gle')
+                .attach('Image2', 'test/image/test.jpg')
+                .attach('Image2', 'test/image/test2.jpg')
+                .end((err, res) => {
+                    if (err) {
+                        expect(res.text).to.equal('Fail Image');
+                        done(err);
+                        return;
+                    }
+                    expect(res.text).to.equal('Success Image');
+                    done();
+                });
+        });
+        it('# Make Thumbnail Image', (done) => {
+            done();
         });
     });
 

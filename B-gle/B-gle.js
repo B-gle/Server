@@ -7,9 +7,8 @@ const app = express();
 
 app.use(formidable({
     encoding: 'utf-8',
-    uploadDir: 'B-gle/upload',
+    uploadDir: 'B-gle/temp',
     multiples: true,
-    keepExtensions: true,
     putSingleFilesInArray: true
 }));
 app.use(b_gleRouter);
