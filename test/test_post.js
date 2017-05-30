@@ -3,10 +3,12 @@ const expect = require('chai').expect;
 const app = require('../B-gle/B-gle.js');
 
 describe('B.gle', () => {
+    // Todo: Check Json Format expect.(content-type , json);
     describe('# Get', () => {
         it('# Get Single Bigle',(done)=>{
+            let id = '592d0619c1e8af13bc683f98';
             request(app)
-                .get('/b-gle/592cc2fc51b9bc044c0e9bb7')
+                .get('/post/'+id)
                 .expect(200)
                 .end((err, res) => {
                     if (err) {
@@ -14,7 +16,7 @@ describe('B.gle', () => {
                         done(err);
                         return;
                     }
-                    expect(res.text).to.equal('592cc2fc51b9bc044c0e9bb7');
+                    expect(res.text).to.equal(id);
                     done();
                 });
 
@@ -23,7 +25,7 @@ describe('B.gle', () => {
     describe('# Post', () => {
         it('# Upload Single Image', (done) => {
             request(app)
-                .post('/b-gle')
+                .post('/post')
                 .attach('Image1', 'test/image/test.jpg')
                 .end((err, res) => {
                     if (err) {
@@ -34,11 +36,27 @@ describe('B.gle', () => {
                     done();
                 });
         });
+        it('# Upload Single Image & Message', (done)=>{
+           request(app)
+               .post('/post')
+               .field('message','Hello World')
+               .attach('Image1', 'test/image/test.jpg')
+               .end((err, res) => {
+                   if (err) {
+                       expect(res.text).to.equal('Fail Image');
+                       done(err);
+                       return;
+                   }
+                   done();
+               });
+        });
     });
 
     it('# Put', (done) => {
+        let id = '592d079ab3daeb13d6baa583';
         request(app)
-            .put('/b-gle')
+            .put('/post/'+id)
+            .field('message','Change Message')
             .expect(200)
             .end((err, res) => {
                 if (err) {
@@ -46,14 +64,14 @@ describe('B.gle', () => {
                     done(err);
                     return;
                 }
-                expect(res.text).to.equal('Hello');
                 done();
             });
 
     });
     it('# Delete', (done) => {
+        let id = '592d0619c1e8af13bc683f98';
         request(app)
-            .del('/b-gle')
+            .del('/post/'+id)
             .expect(200)
             .end((err, res) => {
                 if (err) {
@@ -61,7 +79,6 @@ describe('B.gle', () => {
                     done(err);
                     return;
                 }
-                expect(res.text).to.equal('Hello');
                 done();
             });
 

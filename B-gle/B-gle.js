@@ -1,20 +1,21 @@
 const express = require('express');
 const memberRouter = require('./router/memberRouter');
-const b_gleRouter = require('./router/b_gleRouter');
+const b_gleRouter = require('./router/postRouter');
 const formidable = require('express-formidable');
-const mongoHandler = require('./handler/mongoHandler');
+const MongoHandler = require('./handler/mongoHandler');
 const app = express();
 
 
-mongoHandler.connectMongoDB();
+MongoHandler.connectMongoDB();
+
 app.use(formidable({
     encoding: 'utf-8',
     uploadDir: 'B-gle/temp',
-    multiples: true,
-    putSingleFilesInArray: true
+    multiples: true
 }));
-app.use(b_gleRouter);
 app.use(memberRouter);
+app.use(b_gleRouter);
+
 
 
 module.exports = app;
