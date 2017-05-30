@@ -14,16 +14,17 @@ class s3Handler {
     static uploadImage(image) {
         const params = {
             Bucket: s3Config.bucket,
-            Key: image.getFilePath(),
+            Key: image.getOriginPath(),
             ACL: 'public-read',
-            Body: fs.createReadStream(image.getFilePath()),
+            Body: fs.createReadStream(image.getOriginPath()),
             ContentType: image.getType()
         };
-        image.setURL(s3.endpoint.href + s3Config.bucket + '/' + image.getFilePath());
+        image.setOriginURL(s3.endpoint.href + s3Config.bucket + '/' + image.getOriginPath());
         return new Promise((resolve, reject) => {
             s3.putObject(params, (err) => {
                 if (err) {
                     reject(err);
+                    return;
                 }
                 resolve(image);
             });
@@ -33,21 +34,22 @@ class s3Handler {
     static uploadThumbnail(image) {
         const params = {
             Bucket: s3Config.bucket,
-            Key: image.getThumbnail(),
+            Key: image.getThumbnailPath(),
             ACL: 'public-read',
-            Body: fs.createReadStream(image.getThumbnail()),
+            Body: fs.createReadStream(image.getThumbnailPath()),
             ContentType: image.getType()
         };
+        image.setThumbURL(s3.endpoint.href + s3Config.bucket + '/' + image.getThumbnailPath());
         return new Promise((resolve, reject) => {
             s3.putObject(params, (err) => {
                 if (err) {
                     reject(err);
+                    return;
                 }
                 resolve(image);
             });
         });
     }
-
 }
 
 module.exports = s3Handler;
