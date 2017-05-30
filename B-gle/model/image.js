@@ -1,32 +1,41 @@
 class image {
-    setFilePath(filePath) {
-        this.filePath = filePath;
+    setOriginPath(originPath) {
+        this.originPath = originPath;
     }
 
-    setThumbnail(thumbnail) {
-        this.thumbnail = thumbnail;
+    getOriginPath() {
+        return this.originPath;
     }
 
-    setURL(url) {
-        this.url = url;
+    setThumbnailPath(thumbPath) {
+        this.thumbPath = thumbPath;
     }
 
-    getFilePath() {
-        return this.filePath;
+    getThumbnailPath() {
+        return this.thumbPath;
     }
 
-    getThumbnail() {
-        return this.thumbnail;
+    setThumbURL(thumbURL) {
+        this.thumbURL = thumbURL;
     }
 
-    geturl() {
-        return this.url;
+    getThumbURL() {
+        return this.thumbURL;
     }
 
-    setType(type){
+    setOriginURL(originURL) {
+        this.originURL = originURL;
+    }
+
+    getOriginURL() {
+        return this.originURL;
+    }
+
+    setType(type) {
         this.type = type;
     }
-    getType(){
+
+    getType() {
         return this.type;
     }
 }

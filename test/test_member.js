@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const app = require('../B-gle/B-gle.js');
 
 describe('Member', () => {
-    it('Test Signup', (done) => {
+    it('# Test Signup', (done) => {
         request(app)
             .post('/member')
             .expect(200)

@@ -2,9 +2,11 @@ const express = require('express');
 const memberRouter = require('./router/memberRouter');
 const b_gleRouter = require('./router/b_gleRouter');
 const formidable = require('express-formidable');
-
+const mongoHandler = require('./handler/mongoHandler');
 const app = express();
 
+
+mongoHandler.connectMongoDB();
 app.use(formidable({
     encoding: 'utf-8',
     uploadDir: 'B-gle/temp',

@@ -3,10 +3,13 @@ const router = express.Router();
 
 router.route('/member')
     .post(signup)
-    .put()
+    .put(changeInfo)
     .delete();
 
 function signup(req,res){
+    res.send('success');
+}
+function changeInfo(req,res){
     res.send('success');
 }
 
