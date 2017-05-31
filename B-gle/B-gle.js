@@ -1,8 +1,11 @@
 const express = require('express');
-const memberRouter = require('./router/memberRouter');
-const b_gleRouter = require('./router/postRouter');
 const formidable = require('express-formidable');
 const MongoHandler = require('./handler/mongoHandler');
+
+const memberRouter = require('./router/memberRouter');
+const bgleRouter = require('./router/bgleRouter');
+const groupRouter = require('./router/groupRouter');
+
 const app = express();
 
 
@@ -14,7 +17,8 @@ app.use(formidable({
     multiples: true
 }));
 app.use(memberRouter);
-app.use(b_gleRouter);
+app.use(bgleRouter);
+app.use(groupRouter);
 
 
 

@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const ReplyScheme = mongoose.Schema({
-    text : String
+    writer: String,
+    text: String,
+    date: { type:Date, default:Date.now }
 });
 
 
