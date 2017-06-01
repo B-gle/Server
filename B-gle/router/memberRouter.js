@@ -11,20 +11,19 @@ router.route('/member')
     .delete();
 
 async function signup(req, res) {
-    let result;
     // Todo: Handle Default Profile Photo
     try {
-        for (let fileName in req.files) {
+            let result;
             let user = new User();
 
 
-            let file = req.files[fileName];
+            let file = req.files[0];
 
             let image = new Image();
 
             image.setOriginPath(file.path);
             image.setThumbnailPath(file.path + '_thumb');
-            image.setType(file.type);
+            image.setType(file.mimetype);
 
             await imageHandler.makeThumbnail(image);
             await s3Handler.uploadImage(image);
@@ -32,12 +31,11 @@ async function signup(req, res) {
 
             imageHandler.removeImages(image);
 
-            result = await user.signUp(req.fields, image.getThumbURL());
+            result = await user.signUp(req.body, image.getThumbURL());
             console.log(result);
             res.send('success');
-        }
+
     } catch (err) {
-        console.log(err);
         res.send('error');
     }
 

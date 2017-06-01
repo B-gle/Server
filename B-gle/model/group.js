@@ -1,34 +1,37 @@
 const mongoose = require('mongoose');
-const Member = require('./member').MemberScheme;
+const MemberSchema = require('./member').MemberSchema;
 
-const GroupScheme = mongoose.Schema({
+const GroupSchema = mongoose.Schema({
     title: String,
-    color: String,
-    memberList: [Member]
+    background: String,
+    memberList: [MemberSchema]
 }, {
     versionKey: false
 });
 
 
-GroupScheme.methods.setInfo = function (title, color) {
+GroupSchema.methods.setInfo = function (title, background) {
     this.title = title;
-    this.color = color;
+    this.background = background;
     return this.save();
 };
-GroupScheme.methods.addMember = function (id) {
-    this.memberList.push(id);
+
+GroupSchema.methods.addMember = function (member) {
+    this.memberList.push({id: member.id, name: member.name, profile: member.profile});
     return this.save();
 };
-GroupScheme.statics.changeTitle = function(id,title){
-    return this.update({_id:id},{$set: {title:title}});
-}
-GroupScheme.statics.findGroup = function (id) {
-    return this.findOne({_id:id});
+
+GroupSchema.statics.changeTitle = function (id, title) {
+    return this.update({_id: id}, {$set: {title: title}});
+};
+
+GroupSchema.statics.findGroup = function (id) {
+    return this.findOne({_id: id});
 };
 
 
-const Group = mongoose.model('Group', GroupScheme, 'Group');
+const Group = mongoose.model('Group', GroupSchema, 'Group');
 
 
 module.exports = Group;
-module.exports.GroupScheme = GroupScheme;
+module.exports.GroupSchema = GroupSchema;

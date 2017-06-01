@@ -11,48 +11,57 @@ const imageHandler = require('../handler/imageHandler');
 
 
 router.route('/bgle')
-    .post(createBgleNoGroup);
+    .post(createBgleInNoGroup);
+
 router.route('/bgle/:bgle_id')
     .get(getBgle)
     .put(editBgle)
     .delete(removeBgle);
+
 router.route('/bgle/:group_id')
-    .post(createBgleGroup);
+    .post(createBgleInGroup);
+
+router.route('/bgle/like/:bgle_id')
+    .get();
 
 async function getBgle(req, res) {
     try {
-        //Todo : Refactor Code
-        let result = await Bgle.findOne({_id: req.params.bgle_id});
-        let result2 = result.toObject();
-        result2.status = 'success';
-        res.json(result2);
+        let findBgle = await Bgle.findOne({_id: req.params.bgle_id});
+        let bgleObject = findBgle.toObject();
+        bgleObject.status = 'success';
+        res.json(bgleObject);
     } catch (err) {
         res.status(500).send('Error Find Post!');
     }
 }
-async function createBgleNoGroup(req, res) {
+async function createBgleInNoGroup(req, res) {
+    //Todo save 호출 줄이기
     try {
-        // Todo: Check File, Check Group Num, Refactor Code, 사람일 경우, 그룹일 경우
-        for (let fileName in req.files) {
-
+        for (let fileIndex in req.files) {
             let group = new Group();
-            let groupResult = await group.setInfo('NO Group Test', '##FFFFFF');
+            let groupResult = await group.setInfo('Bgle', '##FFFFFF');
 
-            //그룹이 없는 경우에 사진을 보내면 그룹이 만들어지고 각 유저마다 그룹정보를 들고있는다 또한 그룹도 유저정보를 들고있는다.
-            /* Handle Sender */
-            let id = req.fields.sender;
+            let id = req.body.sender;
             let sender = await User.findUser(id);
-            await group.addMember({id: id, profile: sender.profile});
+            await group.addMember(sender);
+            await sender.addGroup(group);
 
-            /* Handle Receiver */
+            if (!Array.isArray(req.body.receiver)) {
+                let receiverid = req.body.receiver;
+                let receiver = await User.findUser(receiverid);
+                await group.addMember(receiver);
+                await receiver.addGroup(group);
+            } else {
+                for (let i = 0; i < req.body.receiver.length; i++) {
+                    let id = req.body.receiver[i];
+                    let receiver = await User.findUser(id);
+                    await group.addMember(receiver);
+                    await receiver.addGroup(group);
+                }
+            }
 
-            /* Handle User Group */
-            sender.addGroup(group._id);
-
-
-            /* Make Bgle*/
             let bgle = new Bgle();
-            let file = req.files[fileName];
+            let file = req.files[fileIndex];
             let image = new Image();
 
             image.setOriginPath(file.path);
@@ -64,11 +73,10 @@ async function createBgleNoGroup(req, res) {
             image = await s3Handler.uploadThumbnail(image);
 
             imageHandler.removeImages(image);
-            let bgleResult = await bgle.saveBgle(image, req.fields);
+            let bgleResult = await bgle.saveBgle(image, req.body, group._id);
 
             /* Result */
             let object = bgleResult.toObject();
-            object.groupID = groupResult._id;
             object.status = 'success';
             res.send(object);
         }
@@ -79,16 +87,10 @@ async function createBgleNoGroup(req, res) {
     }
 
 }
-async function createBgleGroup(req, res) {
+async function createBgleInGroup(req, res) {
     try {
-        // Todo: Check File, Check Group Num, Refactor Code, 사람일 경우, 그룹일 경우, 멤버인지 아닌지 확인
+        //Todo : Check Member
         for (let fileName in req.files) {
-            // 그룹 있을 경우
-
-            let groupResult = await Group.findGroup(req.params.group_id);
-
-
-            /* Make Bgle*/
             let bgle = new Bgle();
             let file = req.files[fileName];
             let image = new Image();
@@ -102,17 +104,14 @@ async function createBgleGroup(req, res) {
             image = await s3Handler.uploadThumbnail(image);
 
             imageHandler.removeImages(image);
-            let bgleResult = await bgle.saveBgle(image, req.fields);
+            let bgleResult = await bgle.saveBgle(image, req.body, req.params.group_id);
 
-            /* Result */
             let object = bgleResult.toObject();
-            object.groupID = groupResult._id;
             object.status = 'success';
             res.send(object);
         }
 
     } catch (error) {
-        console.log(error);
         res.status(500).send('Error Create Post');
     }
 }

@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
-const MemberScheme = require('./member').MemberScheme;
+const MemberSchema = require('./member').MemberSchema;
 
 const UserSchema = new mongoose.Schema({
     id: {type: String, unique: true},
     email: String,
-    lastName: String,
-    firstName: String,
+    name: String,
     password: String,
     profile: String,
-    friendList: [MemberScheme],
-    groupList: [{groupid: String}]
+    friendList: [MemberSchema],
+    groupList: [new mongoose.Schema({groupId: String, background: String, title: String})]
 }, {
     versionKey: false
 });
@@ -17,20 +16,18 @@ const UserSchema = new mongoose.Schema({
 UserSchema.methods.signUp = function (info, thumbURL) {
     this.id = info.id;
     this.email = info.email;
-    this.lastName = info.lastName;
-    this.firstName = info.firstName;
+    this.name = info.name;
     this.password = info.password;
     this.profile = thumbURL;
     return this.save();
 };
-UserSchema.methods.addGroup = function (id) {
-    this.groupList.push({groupid:id});
+UserSchema.methods.addGroup = function (info) {
+    this.groupList.push({groupId: info.id, background: info.background, title: info.title});
     return this.save();
 };
 UserSchema.statics.findUser = function (id) {
     return User.findOne({id: id});
 };
-
 
 
 const User = mongoose.models.User ? mongoose.model('User') : mongoose.model('User', UserSchema, 'User');

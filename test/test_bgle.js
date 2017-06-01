@@ -1,8 +1,12 @@
 const request = require('supertest');
 const expect = require('chai').expect;
 const app = require('../B-gle/B-gle.js');
+const mongoHandler = require('../B-gle/handler/mongoHandler');
 
 describe('Bgle', () => {
+    before(() => {
+
+    });
     // Todo: Remove Id
     describe('# Get', () => {
         it('# Get Single Bigle', (done) => {
@@ -23,10 +27,13 @@ describe('Bgle', () => {
         });
     });
     describe('# Post', () => {
-        it('# Upload Single Image', (done) => {
+        it('# Upload Single Image & Message & No Group & One to One', (done) => {
             request(app)
                 .post('/bgle')
-                .attach('Image1', 'test/image/test.jpg')
+                .field('sender','testSender')
+                .field('receiver','testReceiver1')
+                .field('message','Hello Node.js')
+                .attach('image', 'test/image/test.jpg')
                 .expect('Content-Type', /json/)
                 .end((err, res) => {
                     if (err) {
@@ -37,12 +44,14 @@ describe('Bgle', () => {
                     done();
                 });
         });
-        it('# Upload Single Image & Message & No Group', (done) => {
+        it('# Upload Single Image & Message & No Group & one to Many', (done) => {
             request(app)
                 .post('/bgle')
-                .field('message', 'Hello World')
-                .field('sender', 'bgleTestID')
-                .attach('Image1', 'test/image/test.jpg')
+                .field('sender','testSender')
+                .field('receiver','testReceiver1')
+                .field('receiver','testReceiver2')
+                .field('message','Hello Node.js')
+                .attach('image', 'test/image/test.jpg')
                 .expect('Content-Type', /json/)
                 .end((err, res) => {
                     if (err) {
@@ -50,32 +59,16 @@ describe('Bgle', () => {
                         done(err);
                         return;
                     }
-                    console.log(res.body);
                     done();
                 });
         });
-        it('# Upload Image & Message & Group', (done) => {
+        it('# Upload Single Image & Message & Group', (done) => {
+            let groupid = '592fcdec9add3e4301d13814';
             request(app)
-                .post('/bgle/592e7281bda410292cac3f37')
-                .field('message', 'Hello World')
-                .field('sender', 'Nesoy')
-                .field('receiver', '["test1", "test2"]')
-                .attach('Image1', 'test/image/test.jpg')
-                .expect('Content-Type', /json/)
-                .end((err, res) => {
-                    if (err) {
-                        expect(res.text).to.equal('Fail Image');
-                        done(err);
-                        return;
-                    }
-                    console.log(res.body);
-                    done();
-                });
-        });
-        it('# Upload Message', (done) => {
-            request(app)
-                .post('/bgle')
-                .field('message', 'Hello World')
+                .post('/bgle/'+ groupid)
+                .field('sender','testSender')
+                .field('message','Hello Node.js')
+                .attach('image', 'test/image/test.jpg')
                 .expect('Content-Type', /json/)
                 .end((err, res) => {
                     if (err) {

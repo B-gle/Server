@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 
-const MemberScheme = mongoose.Schema({
+const MemberSchema = mongoose.Schema({
     id: String,
+    name: String,
     profile: String
 }, {
     versionKey: false
 });
 
 
-const Member = mongoose.model('Member', MemberScheme, 'Member');
+const Member = mongoose.model('Member', MemberSchema, 'Member');
 
 module.exports = Member;
-module.exports.MemberScheme = MemberScheme;
+module.exports.MemberSchema = MemberSchema;
