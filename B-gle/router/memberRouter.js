@@ -5,43 +5,53 @@ const Image = require('../model/image');
 const imageHandler = require('../handler/imageHandler');
 const s3Handler = require('../handler/s3Handler');
 
-router.route('/member')
-    .post(signup)
-    .put(changeInfo)
-    .delete();
 
-async function signup(req, res) {
+router.route('/member')
+    .get(checkMember)
+    .post(signUp)
+    .delete(signOut);
+
+async function checkMember(req, res) {
+    res.send('success');
+}
+async function signUp(req, res) {
     // Todo: Handle Default Profile Photo
     try {
-            let result;
-            let user = new User();
+        let result;
+        let user = new User();
 
 
-            let file = req.files[0];
+        let file = req.files[0];
 
-            let image = new Image();
+        let image = new Image();
 
-            image.setOriginPath(file.path);
-            image.setThumbnailPath(file.path + '_thumb');
-            image.setType(file.mimetype);
+        image.setOriginPath(file.path);
+        image.setThumbnailPath(file.path + '_thumb');
+        image.setType(file.mimetype);
 
-            await imageHandler.makeThumbnail(image);
-            await s3Handler.uploadImage(image);
-            image = await s3Handler.uploadThumbnail(image);
+        await imageHandler.makeThumbnail(image);
+        await s3Handler.uploadImage(image);
+        image = await s3Handler.uploadThumbnail(image);
 
-            imageHandler.removeImages(image);
+        imageHandler.removeImages(image);
 
-            result = await user.signUp(req.body, image.getThumbURL());
-            console.log(result);
-            res.send('success');
+        result = await user.signUp(req.body, image.getThumbURL());
+        console.log(result);
+        res.send('success');
 
     } catch (err) {
         res.send('error');
     }
 
 }
-function changeInfo(req, res) {
-    res.send('success');
+
+
+function signOut() {
+
 }
 
+
+
 module.exports = router;
+
+

@@ -21,8 +21,12 @@ router.route('/bgle/:bgle_id')
 router.route('/bgle/:group_id')
     .post(createBgleInGroup);
 
-router.route('/bgle/like/:bgle_id')
-    .get();
+router.route('/comment/:bgle_id')
+    .post(createComment);
+
+router.route('/like/:bgle_id')
+    .post(likeBgle);
+
 
 async function getBgle(req, res) {
     try {
@@ -39,7 +43,7 @@ async function createBgleInNoGroup(req, res) {
     try {
         for (let fileIndex in req.files) {
             let group = new Group();
-            let groupResult = await group.setInfo('Bgle', '##FFFFFF');
+            await group.setInfo('Bgle', '##FFFFFF');
 
             let id = req.body.sender;
             let sender = await User.findUser(id);
@@ -128,6 +132,27 @@ async function removeBgle(req, res) {
         let result = await Bgle.remove({_id: req.params.bgle_id});
         res.json(result);
     } catch (err) {
+        res.status(500).send('Error Find Post!');
+    }
+}
+
+async function createComment(req, res) {
+    try {
+        let findBgle = await Bgle.findBgle(req.params.bgle_id);
+        let comment = await findBgle.saveComment(req.body.writer, req.body.message);
+        res.send(comment);
+    } catch (err) {
+        res.status(500).send('Error Find Post!');
+    }
+
+}
+
+async function likeBgle(req, res) {
+    try{
+        let findBgle = await Bgle.findBgle(req.params.bgle_id);
+        await findBgle.likeBgle();
+        res.send('success');
+    }catch(err){
         res.status(500).send('Error Find Post!');
     }
 }

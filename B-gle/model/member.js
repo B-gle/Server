@@ -5,6 +5,7 @@ const MemberSchema = mongoose.Schema({
     name: String,
     profile: String
 }, {
+    _id: false,
     versionKey: false
 });
 

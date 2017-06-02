@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
     password: String,
     profile: String,
     friendList: [MemberSchema],
-    groupList: [new mongoose.Schema({groupId: String, background: String, title: String})]
+    groupList: [new mongoose.Schema({groupId: String, background: String, title: String}, { _id: false })]
 }, {
     versionKey: false
 });
@@ -25,6 +25,11 @@ UserSchema.methods.addGroup = function (info) {
     this.groupList.push({groupId: info.id, background: info.background, title: info.title});
     return this.save();
 };
+UserSchema.methods.removeGroup = function (groupId) {
+    this.groupList.pull({groupId: groupId});
+    return this.save();
+};
+
 UserSchema.statics.findUser = function (id) {
     return User.findOne({id: id});
 };
