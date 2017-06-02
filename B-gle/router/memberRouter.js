@@ -10,6 +10,8 @@ router.route('/member')
     .get(checkMember)
     .post(signUp)
     .delete(signOut);
+router.route('/member/login')
+    .post(loginMember);
 
 async function checkMember(req, res) {
     res.send('success');
@@ -40,14 +42,28 @@ async function signUp(req, res) {
         res.send('success');
 
     } catch (err) {
-        res.send('error');
+        res.status(500).send('Error Create Post');
     }
 
 }
-
-
 function signOut() {
 
+}
+
+async function loginMember(req,res){
+    try{
+
+        let findUser = await User.findUser(req.body.id);
+        let result = findUser.isPassword(req.body.password);
+        if(result){
+            res.send('Success');
+        }
+        else{
+            res.status(500).send('Error Create Post');
+        }
+    }catch(err){
+        res.status(500).send('Error Create Post');
+    }
 }
 
 

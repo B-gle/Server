@@ -45,5 +45,40 @@ describe('# Member', () => {
                 done();
             });
     });
+    it('# Signup', (done) => {
+        //Todo : Remove _id, & Setting Primary Key ID
+        request(app)
+            .post('/member')
+            .field('id', 'testReceiver2')
+            .field('email', 'testReceiver1@begle.com')
+            .field('name', '받는이')
+            .field('password', '1234')
+            .attach('image', 'test/image/test.jpg')
+            .expect(200)
 
+            .end((err, res) => {
+                if (err) {
+                    console.log('error');
+                    done(err);
+                    return;
+                }
+                expect(res.text).to.equal('success');
+                done();
+            });
+    });
+    it('# Login', (done) =>{
+        request(app)
+            .post('/member/login')
+            .field('id', 'testSender')
+            .field('password', '1234')
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    console.log('error');
+                    done(err);
+                    return;
+                }
+                done();
+            });
+    });
 });

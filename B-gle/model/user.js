@@ -21,6 +21,11 @@ UserSchema.methods.signUp = function (info, thumbURL) {
     this.profile = thumbURL;
     return this.save();
 };
+
+UserSchema.methods.isPassword = function(password){
+    return this.password === password;
+}
+
 UserSchema.methods.addGroup = function (info) {
     this.groupList.push({groupId: info.id, background: info.background, title: info.title});
     return this.save();
@@ -29,10 +34,12 @@ UserSchema.methods.removeGroup = function (groupId) {
     this.groupList.pull({groupId: groupId});
     return this.save();
 };
+
 UserSchema.methods.addFriend = function (friend) {
     this.friendList.push({id: friend.id, name: friend.name, profile: friend.profile});
     return this.save();
 };
+
 UserSchema.methods.removeFriend = function (friendId) {
     this.friendList.pull({id: friendId});
     return this.save();

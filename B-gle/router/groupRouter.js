@@ -4,7 +4,9 @@ const router = express.Router();
 const Group = require('../model/group');
 const User = require('../model/User');
 
+
 router.route('/group/:group_id')
+    .post(inviteGroup)
     .put(editGroup)
     .delete(removeGroup);
 
@@ -36,6 +38,18 @@ async function removeGroup(req,res){
         }
         res.send(resultGroup);
     } catch (err) {
+        res.status(500).send('Fail');
+    }
+}
+
+async function inviteGroup(req,res) {
+    try{
+        let findGroup = await Group.findGroup(req.params.group_id);
+        let findUser = await User.findUser(req.body.id);
+        await findGroup.addMember(findUser);
+        await findUser.addGroup(findGroup);
+        res.send('success');
+    }catch(err){
         res.status(500).send('Fail');
     }
 }
