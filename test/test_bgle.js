@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const app = require('../B-gle/B-gle.js');
 const mongoHandler = require('../B-gle/handler/mongoHandler');
 
-describe('Bgle', () => {
+describe('# Bgle', () => {
     before(() => {
 
     });

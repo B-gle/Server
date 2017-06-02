@@ -2,8 +2,8 @@ const request = require('supertest');
 const expect = require('chai').expect;
 const app = require('../B-gle/B-gle.js');
 
-describe('Member', () => {
-    it('# Test Signup', (done) => {
+describe('# Member', () => {
+    it('# Signup', (done) => {
         //Todo : Remove _id, & Setting Primary Key ID
         request(app)
             .post('/member')
@@ -24,7 +24,7 @@ describe('Member', () => {
                 done();
             });
     });
-    it('# Test Signup', (done) => {
+    it('# Signup', (done) => {
         //Todo : Remove _id, & Setting Primary Key ID
         request(app)
             .post('/member')
