@@ -4,8 +4,10 @@ const router = express.Router();
 const User = require('../model/user');
 
 router.route('/friend')
+    .get(findFriend)
     .post(addFriend)
     .delete(removeFriend);
+
 
 async function addFriend(req, res) {
     try {
@@ -19,12 +21,20 @@ async function addFriend(req, res) {
     }
 }
 async function removeFriend(req, res) {
-    try{
+    try {
         let findUser = await User.findUser(req.body.id);
         let result = await findUser.removeFriend(req.body.friendId);
-
         res.send(result);
-    }catch(err){
+    } catch (err) {
+        res.status(500).send('error');
+    }
+}
+
+async function findFriend(req, res) {
+    try {
+        let findUser = await User.findUser(req.query.id);
+        res.send(findUser);
+    } catch (err) {
         res.status(500).send('error');
     }
 }

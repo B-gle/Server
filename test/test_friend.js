@@ -35,4 +35,22 @@ describe('# Friend', () => {
             });
     });
 
+    it('# Find Friend', (done) => {
+        // change to fjfjfj
+        request(app)
+            .get('/friend')
+            .query({id:'testSender'})
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    console.log('error');
+                    done(err);
+                    return;
+                }
+                console.log(res.body);
+                done();
+            });
+    });
+
+
 });
