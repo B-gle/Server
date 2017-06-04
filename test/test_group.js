@@ -52,5 +52,21 @@ describe('# Group', () => {
                 done();
             });
     });
+    it('# BookMark Group', (done) => {
+        request(app)
+            .post('/group/bookmark')
+            .field('id','testSender')
+            .field('groupId','59340439af5acb66cc6bcbfa')
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    console.log('error');
+                    done(err);
+                    return;
+                }
+                console.log(res.body);
+                done();
+            });
+    });
 
 });

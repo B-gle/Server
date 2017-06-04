@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const User = require('../model/user');
+const Member = require('../model/member');
 const Image = require('../model/image');
 const Bgle = require('../model/bgle');
 const Group = require('../model/group');
@@ -10,8 +10,15 @@ const s3Handler = require('../handler/s3Handler');
 const imageHandler = require('../handler/imageHandler');
 
 
+// Handle Router 순서
 router.route('/bgle')
     .post(createBgleInNoGroup);
+
+router.route('/bgle/comment/:bgle_id')
+    .post(createComment);
+
+router.route('/bgle/like/:bgle_id')
+    .post(likeBgle);
 
 router.route('/bgle/:bgle_id')
     .get(getBgle)
@@ -21,11 +28,7 @@ router.route('/bgle/:bgle_id')
 router.route('/bgle/:group_id')
     .post(createBgleInGroup);
 
-router.route('/comment/:bgle_id')
-    .post(createComment);
 
-router.route('/like/:bgle_id')
-    .post(likeBgle);
 
 
 async function getBgle(req, res) {
@@ -46,19 +49,19 @@ async function createBgleInNoGroup(req, res) {
             await group.setInfo('Bgle', '##FFFFFF');
 
             let id = req.body.sender;
-            let sender = await User.findUser(id);
+            let sender = await Member.findMember(id);
             await group.addMember(sender);
             await sender.addGroup(group);
 
             if (!Array.isArray(req.body.receiver)) {
                 let receiverid = req.body.receiver;
-                let receiver = await User.findUser(receiverid);
+                let receiver = await Member.findMember(receiverid);
                 await group.addMember(receiver);
                 await receiver.addGroup(group);
             } else {
                 for (let i = 0; i < req.body.receiver.length; i++) {
                     let id = req.body.receiver[i];
-                    let receiver = await User.findUser(id);
+                    let receiver = await Member.findMember(id);
                     await group.addMember(receiver);
                     await receiver.addGroup(group);
                 }

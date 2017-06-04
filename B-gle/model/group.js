@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const MemberSchema = require('./member').MemberSchema;
 
 const GroupSchema = mongoose.Schema({
     title: String,
     background: String,
-    memberList: [MemberSchema]
+    memberList: [new mongoose.Schema({id: String, name: String, profile: String}, {_id: false})],
 }, {
     versionKey: false
 });
@@ -20,6 +19,7 @@ GroupSchema.methods.addMember = function (member) {
     this.memberList.push({id: member.id, name: member.name, profile: member.profile});
     return this.save();
 };
+
 GroupSchema.methods.removeMember = function (id) {
     this.memberList.pull({id:id});
     return this.save();
@@ -28,9 +28,11 @@ GroupSchema.methods.removeMember = function (id) {
 GroupSchema.statics.changeTitle = function (id, title) {
     return this.update({_id: id}, {$set: {title: title}});
 };
+
 GroupSchema.statics.removeGroup = function (id) {
     return this.deleteOne({_id: id});
 };
+
 GroupSchema.statics.findGroup = function (id) {
     return this.findOne({_id: id});
 };

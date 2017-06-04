@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const User = require('../model/user');
+const Member = require('../model/member');
 
 router.route('/friend')
     .get(findFriend)
@@ -9,11 +9,14 @@ router.route('/friend')
     .delete(removeFriend);
 
 
+router.route('/friend/bookmark')
+    .post(bookmarkFriend);
+
 async function addFriend(req, res) {
     try {
-        let findUser = await User.findUser(req.body.id);
-        let friendUser = await User.findUser(req.body.friendId);
-        let result = await findUser.addFriend(friendUser);
+        let findMember = await Member.findMember(req.body.id);
+        let friendMember = await Member.findMember(req.body.friendId);
+        let result = await findMember.addFriend(friendMember);
 
         res.send(result);
     } catch (err) {
@@ -22,8 +25,8 @@ async function addFriend(req, res) {
 }
 async function removeFriend(req, res) {
     try {
-        let findUser = await User.findUser(req.body.id);
-        let result = await findUser.removeFriend(req.body.friendId);
+        let findMember = await Member.findMember(req.body.id);
+        let result = await findMember.removeFriend(req.body.friendId);
         res.send(result);
     } catch (err) {
         res.status(500).send('error');
@@ -32,9 +35,20 @@ async function removeFriend(req, res) {
 
 async function findFriend(req, res) {
     try {
-        let findUser = await User.findUser(req.query.id);
-        res.send(findUser);
+        let findMember = await Member.findMember(req.query.id);
+        res.send(findMember);
     } catch (err) {
+        res.status(500).send('error');
+    }
+}
+
+async function bookmarkFriend(req,res) {
+    try {
+        let findMember = await Member.findMember(req.body.id);
+        await findMember.bookmarkFriend(req.body.friendId);
+        res.send(findMember);
+    } catch (err) {
+        console.log(err);
         res.status(500).send('error');
     }
 }

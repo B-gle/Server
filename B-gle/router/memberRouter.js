@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../model/User');
+const Member = require('../model/member');
 const Image = require('../model/image');
 const imageHandler = require('../handler/imageHandler');
 const s3Handler = require('../handler/s3Handler');
@@ -12,6 +12,8 @@ router.route('/member')
     .delete(signOut);
 router.route('/member/login')
     .post(loginMember);
+router.route('/member/logout')
+    .post(logoutMember);
 
 async function checkMember(req, res) {
     res.send('success');
@@ -20,7 +22,7 @@ async function signUp(req, res) {
     // Todo: Handle Default Profile Photo
     try {
         let result;
-        let user = new User();
+        let member = new Member();
 
 
         let file = req.files[0];
@@ -37,7 +39,7 @@ async function signUp(req, res) {
 
         imageHandler.removeImages(image);
 
-        result = await user.signUp(req.body, image.getThumbURL());
+        result = await member.signUp(req.body, image.getThumbURL());
         console.log(result);
         res.send('success');
 
@@ -53,8 +55,8 @@ function signOut() {
 async function loginMember(req,res){
     try{
 
-        let findUser = await User.findUser(req.body.id);
-        let result = findUser.isPassword(req.body.password);
+        let findMember = await Member.findMember(req.body.id);
+        let result = findMember.isPassword(req.body.password);
         if(result){
             res.send('Success');
         }
@@ -66,6 +68,9 @@ async function loginMember(req,res){
     }
 }
 
+function logoutMember() {
+
+}
 
 
 module.exports = router;

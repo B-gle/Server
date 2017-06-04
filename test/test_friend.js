@@ -36,7 +36,6 @@ describe('# Friend', () => {
     });
 
     it('# Find Friend', (done) => {
-        // change to fjfjfj
         request(app)
             .get('/friend')
             .query({id:'testSender'})
@@ -52,5 +51,19 @@ describe('# Friend', () => {
             });
     });
 
-
+    it('# Bookmark Friend', (done) =>{
+        request(app)
+            .post('/friend/bookmark')
+            .field('id','testSender')
+            .field('friendId', 'testReceiver1')
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    console.log('error');
+                    done(err);
+                    return;
+                }
+                done();
+            });
+    });
 });

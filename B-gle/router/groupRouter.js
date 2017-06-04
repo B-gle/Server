@@ -2,8 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const Group = require('../model/group');
-const User = require('../model/User');
+const Member = require('../model/member');
 
+
+
+router.route('/group/bookmark')
+    .post(bookmarkGroup);
 
 router.route('/group/:group_id')
     .post(inviteGroup)
@@ -24,9 +28,9 @@ async function removeGroup(req,res){
     try {
 
 
-        let findUser = await User.findUser(req.body.id);
+        let findMember = await Member.findMember(req.body.id);
 
-        await findUser.removeGroup(req.params.group_id);
+        await findMember.removeGroup(req.params.group_id);
 
         let findGroup = await Group.findGroup(req.params.group_id);
 
@@ -45,12 +49,24 @@ async function removeGroup(req,res){
 async function inviteGroup(req,res) {
     try{
         let findGroup = await Group.findGroup(req.params.group_id);
-        let findUser = await User.findUser(req.body.id);
-        await findGroup.addMember(findUser);
-        await findUser.addGroup(findGroup);
+        let findMember = await Member.findMember(req.body.id);
+        await findGroup.addMember(findMember);
+        await findMember.addGroup(findGroup);
         res.send('success');
     }catch(err){
         res.status(500).send('Fail');
     }
 }
+
+async function bookmarkGroup(req,res) {
+    try {
+        let findMember = await Member.findMember(req.body.id);
+        await findMember.bookmarkGroup(req.body.groupId);
+        res.send(findMember);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('error');
+    }
+}
+
 module.exports = router;
