@@ -10,7 +10,6 @@ const s3Handler = require('../handler/s3Handler');
 const imageHandler = require('../handler/imageHandler');
 
 
-// Handle Router 순서
 router.route('/bgle')
     .post(createBgleInNoGroup);
 
@@ -29,20 +28,25 @@ router.route('/bgle/:group_id')
     .post(createBgleInGroup);
 
 
-
-
-async function getBgle(req, res) {
+async function getBgle(req, res, next) {
     try {
         let findBgle = await Bgle.findOne({_id: req.params.bgle_id});
-        let bgleObject = findBgle.toObject();
-        bgleObject.status = 'success';
-        res.json(bgleObject);
+        if (findBgle !== null) {
+            let bgleObject = findBgle.toObject();
+            bgleObject.status = 'success';
+            res.json(bgleObject);
+        }else{
+            let error = new Error('Bgle not found');
+            error.code = 404;
+            next(error);
+        }
     } catch (err) {
-        res.status(500).send('Error Find Post!');
+        let error = new Error('Error Bgle get function');
+        error.code = 500;
+        next(error);
     }
 }
-async function createBgleInNoGroup(req, res) {
-    //Todo save 호출 줄이기
+async function createBgleInNoGroup(req, res, next) {
     try {
         for (let fileIndex in req.files) {
             let group = new Group();
@@ -88,13 +92,14 @@ async function createBgleInNoGroup(req, res) {
             res.send(object);
         }
 
-    } catch (error) {
-        console.log(error);
-        res.status(500).send('Error Create Post');
+    } catch (err) {
+        let error = new Error('Error Bgle Create In No Group function');
+        error.code = 500;
+        next(error);
     }
 
 }
-async function createBgleInGroup(req, res) {
+async function createBgleInGroup(req, res, next) {
     try {
         //Todo : Check Member
         for (let fileName in req.files) {
@@ -117,46 +122,55 @@ async function createBgleInGroup(req, res) {
             object.status = 'success';
             res.send(object);
         }
-
-    } catch (error) {
-        res.status(500).send('Error Create Post');
+    } catch (err) {
+        let error = new Error('Error Bgle Create In Group function');
+        error.code = 500;
+        next(error);
     }
 }
-async function editBgle(req, res) {
+async function editBgle(req, res, next) {
     try {
         let result = await Bgle.update({_id: req.params.bgle_id}, {$set: {message: req.fields.message}});
         res.json(result);
     } catch (err) {
-        res.status(500).send('Error Find Post!');
+        let error = new Error('Error Bgle Edit function');
+        error.code = 500;
+        next(error);
     }
 }
-async function removeBgle(req, res) {
+async function removeBgle(req, res, next) {
     try {
         let result = await Bgle.remove({_id: req.params.bgle_id});
         res.json(result);
     } catch (err) {
-        res.status(500).send('Error Find Post!');
+        let error = new Error('Error Bgle Remove function');
+        error.code = 500;
+        next(error);
     }
 }
 
-async function createComment(req, res) {
+async function createComment(req, res, next) {
     try {
         let findBgle = await Bgle.findBgle(req.params.bgle_id);
         let comment = await findBgle.saveComment(req.body.writer, req.body.message);
         res.send(comment);
     } catch (err) {
-        res.status(500).send('Error Find Post!');
+        let error = new Error('Error Bgle Create Comment function');
+        error.code = 500;
+        next(error);
     }
 
 }
 
-async function likeBgle(req, res) {
-    try{
+async function likeBgle(req, res, next) {
+    try {
         let findBgle = await Bgle.findBgle(req.params.bgle_id);
         await findBgle.likeBgle();
         res.send('success');
-    }catch(err){
-        res.status(500).send('Error Find Post!');
+    } catch (err) {
+        let error = new Error('Error Bgle Like function');
+        error.code = 500;
+        next(error);
     }
 }
 

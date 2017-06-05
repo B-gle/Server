@@ -7,8 +7,10 @@ mongoose.Promise = global.Promise;
 
 class dbHandler {
     static connectMongoDB() {
-        // Todo : Handle MongoDB Connection Error
-        mongoose.connect(mongoConfig.url);
+        return mongoose.connect(mongoConfig.url);
+    }
+    static connectTestMongoDB(){
+        return mongoose.connect(mongoConfig.testurl);
     }
 }
 module.exports = dbHandler;

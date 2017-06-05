@@ -4,7 +4,7 @@
   "description": "b.gle Server",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "NODE_ENV=dev mocha"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,8 @@
     "passport": "^0.3.2",
     "passport-kakao": "0.0.4",
     "pm2": "^2.4.6",
-    "sharp": "^0.17.3"
+    "sharp": "^0.17.3",
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

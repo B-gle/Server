@@ -15,10 +15,10 @@ router.route('/member/login')
 router.route('/member/logout')
     .post(logoutMember);
 
-async function checkMember(req, res) {
+async function checkMember(req,res,next) {
     res.send('success');
 }
-async function signUp(req, res) {
+async function signUp(req,res,next) {
     // Todo: Handle Default Profile Photo
     try {
         let result;
@@ -48,24 +48,35 @@ async function signUp(req, res) {
     }
 
 }
-function signOut() {
 
+
+async function loginMember(req, res, next) {
+    try {
+        let findMember = await Member.findMember(req.body.id);
+        if (findMember !== null) {
+            if(findMember.isPassword(req.body.password)){
+                res.send('success');
+            }else{
+                let error = new Error('Password Wrong');
+                error.code = 401;
+                next(error);
+            }
+        }
+        else {
+            let error = new Error('Member not Found');
+            error.code = 404;
+            next(error);
+        }
+    }
+    catch (err) {
+        let error = new Error('Error Member login function');
+        error.code = 500;
+        next(error);
+    }
 }
 
-async function loginMember(req,res){
-    try{
+function signOut() {
 
-        let findMember = await Member.findMember(req.body.id);
-        let result = findMember.isPassword(req.body.password);
-        if(result){
-            res.send('Success');
-        }
-        else{
-            res.status(500).send('Error Create Post');
-        }
-    }catch(err){
-        res.status(500).send('Error Create Post');
-    }
 }
 
 function logoutMember() {
