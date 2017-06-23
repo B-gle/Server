@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 const Member = require('../model/member');
 const Image = require('../model/image');
@@ -16,7 +17,7 @@ router.route('/member/logout')
     .post(logoutMember);
 
 async function checkMember(req,res,next) {
-    res.send('success');
+    res.send({msg:'success'});
 }
 async function signUp(req,res,next) {
     // Todo: Handle Default Profile Photo
@@ -52,6 +53,7 @@ async function signUp(req,res,next) {
 
 async function loginMember(req, res, next) {
     try {
+        console.log(req.query);
         let findMember = await Member.findMember(req.body.id);
         if (findMember !== null) {
             if(findMember.isPassword(req.body.password)){

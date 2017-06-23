@@ -19,18 +19,61 @@ describe('# Bgle', () => {
         password: '1234',
         profile: 'testProfile'
     };
+    let dummyBgle = {
+        _id: '5930f70fb286c3551182b029',
+        sender: 'testSender',
+        groupId: 'testGroup',
+        originURL: 'testURL',
+        thumbURL: 'testThumbURL',
+        like: 0,
+        message: 'testMessage'
+    };
+    let dummyBgle = {
+        _id: '5930f70fb286c3551182b029',
+        sender: 'testSender',
+        groupId: 'testGroup',
+        originURL: 'testURL',
+        thumbURL: 'testThumbURL',
+        like: 0,
+        message: 'testMessage'
+    };
+    let dummyBgle2 = {
+        _id: '5930f70fb286c3551182b028',
+        sender: 'testSender',
+        groupId: 'testGroup',
+        originURL: 'testURL',
+        thumbURL: 'testThumbURL',
+        like: 0,
+        message: 'testMessage'
+    };
     before(async () => {
-        await Member.remove({});
-        await Bgle.remove({});
-        await new Bgle(dummyClient1).save();
-        await new Member(dummyClient2).save();
+        //await Member.remove({});
+        //await Bgle.remove({});
+        //await new Bgle(dummyClient1).save();
+        //await new Member(dummyClient2).save();
+        await new Bgle(dummyBgle).save();
     });
 
     it('# Get Single Bigle', (done) => {
-        let id = '592e56d882e2842713369e43';
         request(app)
-            .get('/bgle/' + id)
+            .get('/bgle/' + dummyBgle._id)
             .expect(200)
+            .expect('Content-Type', /json/)
+            .end((err, res) => {
+                if (err) {
+                    console.log('error');
+                    done(err);
+                    return;
+                }
+                console.log(res.body);
+                done();
+            });
+    });
+
+    it('# Fail Get Single Bigle', (done) => {
+        request(app)
+            .get('/bgle/' + dummyBgle2._id)
+            .expect(404)
             .expect('Content-Type', /json/)
             .end((err, res) => {
                 if (err) {

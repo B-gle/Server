@@ -36,6 +36,6 @@ BgleSchema.statics.findBgle = function (id) {
     return this.findOne({_id: id});
 };
 
-const Bgle = mongoose.model('Bgle', BgleSchema, 'Bgle');
+const Bgle = mongoose.models.Bgle ? mongoose.model('Bgle') : mongoose.model('Bgle', BgleSchema, 'Bgle');
 
 module.exports = Bgle;

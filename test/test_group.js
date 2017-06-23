@@ -30,6 +30,7 @@ describe('# Group', () => {
         let member1 = await new Member(dummyClient1).save();
         let member2 = await new Member(dummyClient2).save();
         let group = await new Group(dummyGroup).save();
+        member1.addGroup(dummyGroup);
         await group.addMember(member1);
     });
 
@@ -50,6 +51,7 @@ describe('# Group', () => {
                 done();
             });
     });
+
     it('# Edit Group Title in No Member ',(done) => {
         let group_id = dummyGroup._id;
         request(app)
@@ -66,11 +68,13 @@ describe('# Group', () => {
             });
     });
 
-    it('# Delete Group', (done) => {
+
+
+    it('# Invite Group', (done) => {
         let group_id = dummyGroup._id;
         request(app)
-            .delete('/group/'+group_id)
-            .field('id','testReceiver1')
+            .post('/group/'+group_id)
+            .field('id',dummyClient2.id)
             .expect(200)
             .end((err, res) => {
                 if (err) {
@@ -83,26 +87,10 @@ describe('# Group', () => {
             });
     });
 
-    it('# Invite Group', (done) => {
-        let group_id = dummyGroup._id;
-        request(app)
-            .post('/group/'+group_id)
-            .field('id','testReceiver2')
-            .expect(200)
-            .end((err, res) => {
-                if (err) {
-                    console.log('error');
-                    done(err);
-                    return;
-                }
-                console.log(res.body);
-                done();
-            });
-    });
     it('# BookMark Group', (done) => {
         request(app)
             .post('/group/bookmark')
-            .field('id','testSender')
+            .field('id',dummyClient1.id)
             .field('groupId',dummyGroup._id)
             .expect(200)
             .end((err, res) => {
@@ -116,4 +104,20 @@ describe('# Group', () => {
             });
     });
 
+    it('# Delete Group', (done) => {
+        let group_id = dummyGroup._id;
+        request(app)
+            .delete('/group/'+group_id)
+            .field('id',dummyClient1.id)
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    console.log('error');
+                    done(err);
+                    return;
+                }
+                console.log(res.body);
+                done();
+            });
+    });
 });

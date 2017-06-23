@@ -38,7 +38,7 @@ MemberSchema.methods.isPassword = function (password) {
 };
 
 MemberSchema.methods.addGroup = function (info) {
-    this.groupList.push({_id: info.id, background: info.background, title: info.title});
+    this.groupList.push({_id: info._id, background: info.background, title: info.title});
     return this.save();
 };
 MemberSchema.methods.removeGroup = function (groupId) {

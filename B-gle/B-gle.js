@@ -1,5 +1,7 @@
 const express = require('express');
 const multer = require('multer');
+const morgan = require('morgan');
+const cors = require('cors');
 const winston = require('winston');
 
 const MongoHandler = require('./handler/mongoHandler');
@@ -26,8 +28,8 @@ try {
     winston.debug('Error : MongoDB Connection');
     process.exit(1);
 }
-
-
+app.use(morgan('dev'));
+app.use(cors());
 app.use(multer({dest: 'B-gle/temp'}).array('image'));
 
 app.use(memberRouter);

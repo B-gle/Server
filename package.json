@@ -18,8 +18,10 @@
   "homepage": "https://github.com/B-gle/Server#readme",
   "dependencies": {
     "aws-sdk": "^2.57.0",
+    "cors": "^2.8.3",
     "express": "^4.15.3",
     "mongoose": "^4.10.2",
+    "morgan": "^1.8.2",
     "multer": "^1.3.0",
     "passport": "^0.3.2",
     "passport-kakao": "0.0.4",

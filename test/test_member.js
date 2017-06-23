@@ -73,7 +73,7 @@ describe('# Member', () => {
             .field('id', failClient.id)
             .field('password', failClient.password)
             .expect(404)
-            .end((err, res) => {
+            .end((err, res) => {2
                 if (err) {
                     winston.debug(err);
                     done(err);
